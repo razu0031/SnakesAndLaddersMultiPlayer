@@ -1,0 +1,71 @@
+private void moveGuti(int diceValue){
+        
+        if(diceValue!=0 && finalValue<100){
+            int value = finalValue+diceValue; 
+
+            if(UpDown.LADDER.containsKey(value+""))
+                finalValue = Integer.parseInt(UpDown.LADDER.get(value+""));
+            else if(UpDown.SNAKE.containsKey(value+""))
+                finalValue = Integer.parseInt(UpDown.SNAKE.get(value+""));
+            else finalValue = value;       
+
+            Thread thread = new Thread(new Runnable() {
+
+                boolean continueMove = true;
+                @Override
+                public void run() {
+
+                    while(continueMove){
+
+                        if(guti.isVisible()){
+                            int cx = guti.getX()-5;
+                            int cy = guti.getY()-5;          
+                            int cValue = getValue(cx, cy);
+                            System.out.println("value="+value+", Y="+cValue);
+
+                            if(value>=cValue){ 
+                                for(int i=cValue+1; i<=value; i++){
+                                    setGutiLocation(i);
+
+                                    try {
+                                        Thread.sleep(200);
+                                    } catch (InterruptedException ex) {
+                                        System.err.println(ex);
+                                    }
+                                } 
+                                setGutiLocation(finalValue);
+                                continueMove=false;
+                            } 
+                            else {
+                                for(int i=cValue-1; i>=value; i--){
+                                    setGutiLocation(i);
+
+                                    try {
+                                        Thread.sleep(200);
+                                    } catch (InterruptedException ex) {
+                                        System.err.println(ex);
+                                    }
+                                }
+                                setGutiLocation(finalValue);
+                                continueMove=false;
+                            }                           
+                        }
+                        else {
+                            for(int i=1; i<=value; i++){
+                                setGutiLocation(i);
+
+                                try {
+                                    Thread.sleep(200);
+                                } catch (InterruptedException ex) {
+                                    System.err.println(ex);
+                                }
+                            } 
+                            setGutiLocation(finalValue);
+                            continueMove=false;
+                        }
+                    }
+                }
+            });
+            thread.start();
+        }
+    }
